@@ -32,7 +32,9 @@
 <div class="wrapper">
 
 @include('admin.layout.header')
-
+  @if(Session::has('message'))
+    <p id="flashMessage" class="aabb alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
+  @endif
 @yield('content')
 
 @include('admin.layout.footer')

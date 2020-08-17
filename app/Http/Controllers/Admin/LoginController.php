@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use Hash;
+use Session;
+use Carbon\Carbon;
+use App\Model\User;
 
 class LoginController extends Controller
 {
@@ -29,15 +32,33 @@ class LoginController extends Controller
 
     public function loginsubmit(Request $request)
     {
+        $validateData = $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
         $email = $request->input('email');
         $password = $request->input('password');
         $superadmin = config('constants.superadmin');
         $sadmin_password = config('constants.superadmin_password');
         if($email == $superadmin && $sadmin_password == $password){
-           return view('admin/home');
+            $user = array("username"=>$superadmin);
+            $userType = 'admin';
+            Session::put(['user'=>$user,'userType'=>$userType]);
+            // session(['user' => $user]);
+            return view('admin/home',compact('userType'))->with('message','Login Success!');
         }else{
-            dd('Normal user');
-
+                $user = User::where('username',$email)
+                            ->first();
+                if(!$user || (!Hash::check($password,$user->secret))){
+                    return redirect()->back()->with('message','Incorrect username or password!');
+                }
+                else{
+                    // dd($user);
+                    Session::put('user', $user);
+                    $userType = 'normal';
+                    return view('admin/home',compact('userType','user'))->with('message','Login Success!');
+                }
+               
         }
     }
 

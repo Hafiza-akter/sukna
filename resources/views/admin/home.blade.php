@@ -21,6 +21,7 @@
     </div>
     <!-- /.content-header -->
 <section class="content">
+
 <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
