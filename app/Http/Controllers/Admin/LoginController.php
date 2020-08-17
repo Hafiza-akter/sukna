@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class LoginController extends Controller
      */
     public function index()
     {
-        return view('auth/login');
+        return view('admin/auth/login');
     }
 
     /**
@@ -23,7 +24,21 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return view('auth/registration');
+        return view('admin/auth/registration');
+    }
+
+    public function loginsubmit(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $superadmin = config('constants.superadmin');
+        $sadmin_password = config('constants.superadmin_password');
+        if($email == $superadmin && $sadmin_password == $password){
+           return view('admin/home');
+        }else{
+            dd('Normal user');
+
+        }
     }
 
     /**
