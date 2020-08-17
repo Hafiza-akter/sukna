@@ -11,6 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('login');
-});
+Route::get('/','LoginController@index')->name('login');
+Route::get('/registration','LoginController@create')->name('registration');
