@@ -53,6 +53,7 @@ class UserController extends Controller
             'email' => 'required',
             'ffwc_sations' => 'required',
             'zoom_level' => 'required',
+            'password' => 'required',
 
         ]);
         $user = new User();
@@ -115,6 +116,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validateData = $request->validate([
+            
             'role_id' => 'required',
             'location_id' => 'required',
             'email' => 'required',

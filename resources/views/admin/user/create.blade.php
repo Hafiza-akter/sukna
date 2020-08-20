@@ -36,10 +36,10 @@
                   <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">Password</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="password" required placeholder="Password">
+                      <input type="password" required class="form-control" name="password" required placeholder="Password">
                     </div>
                   </div>
-                  <div class="form-group row">
+                  <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">User loc level</label>
                     <div class="col-sm-10">
                       <select class="form-control" name="user_loc_level" required>
@@ -92,9 +92,9 @@
                     </div>
                   </div>
                   <div class="form-group  row">
-                    <label class="col-sm-2 col-form-label">Description</label>
+                    <label class="col-sm-2 col-form-label">Custom message</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="user_slide_description" placeholder="Slide description">
+                      <textarea class="form-control" name="user_slide_description" placeholder="Slide description"></textarea>
                     </div>
                   </div>
                  

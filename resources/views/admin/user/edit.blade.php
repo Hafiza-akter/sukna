@@ -36,10 +36,10 @@
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Password</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="password"  placeholder="Password">
+                      <input type="password" class="form-control" name="password"  placeholder="Password">
                     </div>
                   </div>
-                  <div class="form-group row">
+                  <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">User loc level</label>
                     <div class="col-sm-10">
                       <select class="form-control" name="user_loc_level" required>
@@ -68,7 +68,7 @@
                         <div class="col-sm-8">
                             <select class="form-control" name="location_id" required>
                             @foreach($locations as $location)
-                            <option value="{{$location->id}}" {{($user->location_id  == $location->id) ? 'selected' : ''}}>{{$location->upazila_name}}</option>
+                            <option value="{{$location->id}}" {{($user->location_id  == $location->id) ? 'selected' : ''}}>{{$location->upazila_name}}{{($location->district_name)? "-".$location->district_name:''}}{{($location->union_name)? "-".$location->union_name:''}}</option>
                             @endforeach
                             </select>                    
                         </div>
@@ -83,13 +83,6 @@
                   </div>
 
                   <div class="form-group required row">
-                    <label class="col-sm-2 col-form-label">Description</label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="user_slide_description" value="{{$user->user_slide_description}}">
-                    </div>
-                  </div>
-
-                  <div class="form-group required row">
                   <label class="col-sm-2 col-form-label">Station</label>
                     <div class="col-sm-10 select2-purple">
                       <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
@@ -97,6 +90,12 @@
                               <option value="{{$ffwcStation->id}}"{{(in_array($ffwcStation->id, $userStations)) ? 'selected="true"':''}}>{{$ffwcStation->name}}</option>
                           @endforeach
                       </select>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Custom message</label>
+                    <div class="col-sm-10">
+                      <textarea class="form-control" name="user_slide_description" placeholder="Slide description">{{$user->user_slide_description}}</textarea>
                     </div>
                   </div>
                  
