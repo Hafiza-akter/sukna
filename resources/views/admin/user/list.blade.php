@@ -20,8 +20,6 @@
                       <th>Loc level</th>
                       <th>Role </th>
                       <th>Location</th>
-                      <th>Zoom level</th>
-                      <th>User slide desc</th>
                       <th style="width: 100px">Action</th>
                     </tr>
                   </thead>
@@ -31,11 +29,20 @@
                     <tr>
                       <td>{{ $i++ }}</td>
                       <td>{{ $user->username }}</td>
-                      <td>{{ $user->user_loc_level }}</td>
+                      <td>{{ ($user->user_loc_level) ? $user->user_loc_level:'N/A' }}</td>
                       <td>{{ $user->getUserRole->name }}</td>
-                      <td>{{ $user->getUserLocation->upazila_name }}</td>
-                      <td>{{ $user->zoom_level }}</td>
-                      <td>{{ $user->user_slide_description }}</td>
+                      <td>
+                       <?php
+                        if(!$user->getUserLocation){?>
+                          {{'N/A'}}
+                       <?php  }
+                        else{ ?>
+                          {{ ($user->getUserLocation->upazila_name) ?  $user->getUserLocation->upazila_name : ''}}
+                          {{ ($user->getUserLocation->district_name) ?  "-".$user->getUserLocation->district_name : ''}}
+                          {{ ($user->getUserLocation->union_name) ?  "-".$user->getUserLocation->union_name : ''}}
+                      <?php  }
+                       ?>
+                      </td>
                       <td>
                        <a href="{{route('useredit',$user->id)}}"><i class="fas fa-edit"></i></a>
                        <!-- <a href="" onclick="return confirm('Are you sure?')" class="disabled"><i class="fas fa-trash-alt disabled"></i></a> -->

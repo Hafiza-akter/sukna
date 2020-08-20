@@ -24,7 +24,7 @@
                         </ul>
                     </div>
                 @endif
-              <form class="form-horizontal" method="post" action="{{route('userstore')}}">
+              <form class="form-horizontal" method="post" action="{{route('userstore')}}" onsubmit="sortablesubmit()">
                 {{ csrf_field() }}
                 <div class="card-body">
                   <div class="form-group required row">
@@ -40,64 +40,73 @@
                     </div>
                   </div>
                   <div class="form-group required row">
-                    <label class="col-sm-2 col-form-label">User loc level</label>
-                    <div class="col-sm-10">
-                      <select class="form-control" name="user_loc_level" required>
-                        <option value="district">District</option>
-                        <option value="upazila">Upazila</option>
-                        <option value="union">Union</option>
-                      </select>  
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <div class="form-group required row">
-                        <label class="col-sm-4  required col-form-label">Role</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" name="role_id" required>
+                    <label class="col-sm-2  required col-form-label">Role</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="role_id" id="role_id" required>
+                            <option value="">--select--</option>
                             @foreach($roles as $role)
                             <option value="{{$role->id}}">{{$role->name}}</option>
                             @endforeach
                             </select>                    
                         </div>
+                  </div>
+                  <span id="locuserfield">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group row">
+                        <label class="col-sm-4  col-form-label">User level</label>
+                        <div class="col-sm-8">
+                          <select class="form-control" name="user_loc_level">
+                            <option value="">--select--</option>
+                            <option value="district">District</option>
+                            <option value="upazila">Upazila</option>
+                            <option value="union">Union</option>
+                        </select>                    
+                        </div>
                       </div>
                     </div> 
                     <div class="col-sm-6">
-                      <div class="form-group required row">
-                        <label class="col-sm-4 required col-form-label">Location</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" required name="location_id" required>
-                            @foreach($locations as $location)
-                            <option value="{{$location->id}}">{{$location->upazila_name}}</option>
-                            @endforeach
-                            </select>                    
+                      <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Location</label>
+                        <div class="col-sm-8"> 
+                            <select class="form-control select2bs4" style="width: 100%;" name="location_id">
+                            <option value="">--select--</option>
+                              @foreach($locations as $location)
+                              <option value="{{$location->id}}">{{$location->upazila_name}}{{($location->district_name)? "-".$location->district_name:''}}{{($location->union_name)? "-".$location->union_name:''}}</option>
+                              @endforeach
+                            </select>                
                         </div>
                       </div>
                     </div> 
                   </div>
-                  <div class="form-group required row">
+                  <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Zoom level</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" required name="zoom_level" placeholder="Zoom level">
+                      <input type="number" class="form-control" name="zoom_level" placeholder="Zoom level">
                     </div>
                   </div>
-                <div class="form-group required row">
+                <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Station</label>
                     <div class="col-sm-10 select2-purple">
-                      <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                      <select class="select2" name="ffwc_sations[]" multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
                           @foreach($ffwcStations as $ffwcStation)
                             <option value="{{$ffwcStation->id}}">{{$ffwcStation->name}}</option>
                           @endforeach
                       </select>
                     </div>
                   </div>
-                  <div class="form-group  row">
-                    <label class="col-sm-2 col-form-label">Custom message</label>
-                    <div class="col-sm-10">
-                      <textarea class="form-control" name="user_slide_description" placeholder="Slide description"></textarea>
+                  <div class="form-group row">
+                    <div class="col-sm-12"><p class="text-bold slide mt-3">Assign Slides and Sorting</p></div>
+                    <div class="col-sm-12">
+                    <ul id="sortable">
+                        @foreach($slideDetails as $slideDetail)
+                        <li id="{{$slideDetail->id}}" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input name = "slide_{{$slideDetail->id}}]" value="{{$slideDetail->id}}" class="habi form-check-input mr-2" type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
+                        @endforeach
+                       </ul>
                     </div>
                   </div>
-                 
+
+                  </span>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">

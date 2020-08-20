@@ -24,7 +24,7 @@
 <body>
 <div class="container" style="margin-top:5%">
     <div class="col-md-3 offset-md-5 mb-3">
-        <img src="{{asset('images/login.png')}}" style="width:100px" class="mr-3"><span class="moto"> KIOSK <span>
+        <img src="{{asset('images/login.png')}}" style="width:100px" class="mr-3"><span class="moto"> KIOSK ADMIN <span>
     </div>
     <div class="col-md-6 offset-md-3 ">
     <div class="card card-info">

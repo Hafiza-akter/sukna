@@ -29,6 +29,50 @@
   <link rel="stylesheet" href="{{asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 
   <link rel="stylesheet" href="{{asset('css/style.css')}}">
+
+
+  <!-- sortable jquery -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <style>
+  #sortable {
+     list-style-type: none; 
+     margin: 0; 
+     padding: 0; 
+     width: 60%; 
+    }
+  #sortable li { 
+    margin: 0 3px 3px 3px; 
+    padding: 1em; 
+    padding-left: 1.5em; 
+    font-size: 1.4em; 
+    height: 18px; 
+  }
+  #sortable li .ui-icon-arrowthick-2-n-s { 
+    position: absolute; 
+    margin-left: -1.3em; 
+    margin-right: 1em;
+  }
+  #sortable li .habi { 
+    position: relative;
+    bottom: 13px;
+    left: 8%;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+  } );
+
+
+  function sortablesubmit(){
+   var idsInOrder = $("#sortable").sortable("toArray");
+  //  alert(idsInOrder);
+}
+  </script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
