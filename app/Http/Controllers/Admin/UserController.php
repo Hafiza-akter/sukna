@@ -97,7 +97,8 @@ class UserController extends Controller
         $roles = Role::all();
         $locations = Location::all();
         $ffwcStations = FfwcStation::all();
-        $userStations = (array)(UserStation::where('user_id',$id)->first());
+        $userStations = UserStation::where('user_id',$id)->pluck('ffwc_stations_id')->toArray();
+        // dd((array)$userStations);
         $user = User::Where('id',$id)->first();
         return view('admin/user/edit', compact('user','roles','locations','ffwcStations','userStations'));
     }
