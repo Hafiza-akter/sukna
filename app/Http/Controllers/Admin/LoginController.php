@@ -41,25 +41,33 @@ class LoginController extends Controller
         $superadmin = config('constants.superadmin');
         $sadmin_password = config('constants.superadmin_password');
         if($email == $superadmin && $sadmin_password == $password){
-            $user = array("username"=>$superadmin);
-            $userType = 'admin';
-            Session::put(['user'=>$user,'userType'=>$userType]);
-            // session(['user' => $user]);
-            return view('admin/home',compact('userType'))->with('message','Login Success!');
+            $user = $superadmin;
+            $is_admin = 1;
+            session(['user' => $user,'is_admin'=>$is_admin]);
+            return redirect()->route('home')->with('message','Login Success!');
+
         }else{
-                $user = User::where('username',$email)
-                            ->first();
-                if(!$user || (!Hash::check($password,$user->secret))){
-                    return redirect()->back()->with('message','Incorrect username or password!');
-                }
-                else{
-                    // dd($user);
-                    Session::put('user', $user);
-                    $userType = 'normal';
-                    return view('admin/home',compact('userType','user'))->with('message','Login Success!');
-                }
+            $is_admin = 0;
+            $user = User::where('username',$email)
+                        ->first();
+            if(!$user || (!Hash::check($password,$user->secret))){
+                return redirect()->back()->with('message','Incorrect username or password!');
+            }
+            else{
+                session(['user' => $user,'is_admin'=>$is_admin]);
+                return redirect()->route('home')->with('message','Login Success!');
+            }
                
         }
+    }
+
+    public function logout(){
+        session()->flush();
+        return redirect()->route('login');
+    }
+
+    public function home(){
+        return view('admin/home');
     }
 
     /**

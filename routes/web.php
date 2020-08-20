@@ -11,10 +11,28 @@
 |
 */
 Route::prefix('admin')->group(function(){
-    Route::get('/','Admin\LoginController@loginsubmit')->name('home');
-    Route::get('/login','Admin\LoginController@index')->name('login');
-    Route::post('/loginsubmit','Admin\LoginController@loginsubmit')->name('loginsubmit');
+    Route::group(['middleware'=>'checkLogout'],function(){
+        Route::get('/login','Admin\LoginController@index')->name('login'); 
+        Route::post('/loginsubmit','Admin\LoginController@loginsubmit')->name('loginsubmit');
+    });
 
+    Route::group(['middleware'=>'checkLogin'],function(){
+        Route::get('/logout','Admin\LoginController@logout')->name('logout');
+        Route::get('/home','Admin\LoginController@home')->name('home');
+
+        Route::group(['middleware'=>'checkAdmin'],function(){
+            Route::prefix('user')->group(function(){
+                Route::get('/', 'Admin\UserController@index')->name('userlist');
+                Route::get('/create','Admin\UserController@create')->name('useradd');
+                Route::post('/store','Admin\UserController@store')->name('userstore');
+                // Route::get('/delete/{id}','Admin\UserController@delete')->name('userdelete');
+                Route::get('/edit/{id}','Admin\UserController@edit')->name('useredit');
+                Route::post('/update','Admin\UserController@update')->name('userupdate');
+            });
+        });
+    });
 });
+
+
 
 

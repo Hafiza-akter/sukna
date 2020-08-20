@@ -16,9 +16,6 @@
                 </ul>
             </div>
         @endif
-        @if(Session::has('message'))
-            <p id="flashMessage" class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
-        @endif
         <form class="form-horizontal" method="post" action="{{route('loginsubmit')}}">
         {{ csrf_field() }}
         <div class="card-body">
