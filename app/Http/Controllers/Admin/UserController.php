@@ -96,8 +96,10 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $locations = Location::all();
+        $ffwcStations = FfwcStation::all();
+        $userStations = (array)(UserStation::where('user_id',$id)->first());
         $user = User::Where('id',$id)->first();
-        return view('admin/user/edit', compact('user','roles','locations'));
+        return view('admin/user/edit', compact('user','roles','locations','ffwcStations','userStations'));
     }
 
     /**
@@ -125,6 +127,15 @@ class UserController extends Controller
         $user->zoom_level = $request->input('zoom_level');
         $user->user_slide_description = $request->input('user_slide_description');
         $user->save();
+
+        $ffwc_sations = $request->input('ffwc_sations');
+        $userStation = UserStation::where('user_id',$id)->delete();
+        foreach($ffwc_sations as $ffwc_sation){
+            $userStation = new UserStation();
+            $userStation->user_id = $id;
+            $userStation->ffwc_stations_id = $ffwc_sation;
+            $userStation->save();
+        }
 
          return redirect()->route('userlist')->with('message','User Updated Successfully!'); 
 
