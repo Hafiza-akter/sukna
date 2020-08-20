@@ -51,6 +51,8 @@ class UserController extends Controller
             'role_id' => 'required',
             'location_id' => 'required',
             'email' => 'required',
+            'ffwc_sations' => 'required',
+            'zoom_level' => 'required',
 
         ]);
         $user = new User();
@@ -116,6 +118,8 @@ class UserController extends Controller
             'role_id' => 'required',
             'location_id' => 'required',
             'email' => 'required',
+            'ffwc_sations' => 'required',
+            'zoom_level' => 'required',
         ]);
         $id = $request->input('id');
         $user =  User::where('id',$id)->first();

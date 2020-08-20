@@ -75,14 +75,14 @@
                       </div>
                     </div> 
                   </div>
-                  <div class="form-group  row">
+                  <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">Zoom level</label>
                     <div class="col-sm-10">
                       <input type="number" class="form-control" name="zoom_level" value="{{$user->zoom_level}}">
                     </div>
                   </div>
 
-                  <div class="form-group row">
+                  <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">Description</label>
                     <div class="col-sm-10">
                       <input type="text" class="form-control" name="user_slide_description" value="{{$user->user_slide_description}}">
@@ -92,7 +92,7 @@
                   <div class="form-group required row">
                   <label class="col-sm-2 col-form-label">Station</label>
                     <div class="col-sm-10 select2-purple">
-                      <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                      <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
                           @foreach($ffwcStations as $ffwcStation)
                               <option value="{{$ffwcStation->id}}"{{(in_array($ffwcStation->id, $userStations)) ? 'selected="true"':''}}>{{$ffwcStation->name}}</option>
                           @endforeach

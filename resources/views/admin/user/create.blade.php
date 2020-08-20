@@ -52,7 +52,7 @@
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="form-group required row">
-                        <label class="col-sm-4 col-form-label">Role</label>
+                        <label class="col-sm-4  required col-form-label">Role</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="role_id" required>
                             @foreach($roles as $role)
@@ -64,9 +64,9 @@
                     </div> 
                     <div class="col-sm-6">
                       <div class="form-group required row">
-                        <label class="col-sm-4 col-form-label">Location</label>
+                        <label class="col-sm-4 required col-form-label">Location</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="location_id" required>
+                            <select class="form-control" required name="location_id" required>
                             @foreach($locations as $location)
                             <option value="{{$location->id}}">{{$location->upazila_name}}</option>
                             @endforeach
@@ -75,16 +75,16 @@
                       </div>
                     </div> 
                   </div>
-                  <div class="form-group row">
+                  <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">Zoom level</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" name="zoom_level" placeholder="Zoom level">
+                      <input type="number" class="form-control" required name="zoom_level" placeholder="Zoom level">
                     </div>
                   </div>
                 <div class="form-group required row">
                   <label class="col-sm-2 col-form-label">Station</label>
                     <div class="col-sm-10 select2-purple">
-                      <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                      <select class="select2" name="ffwc_sations[]" required multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
                           @foreach($ffwcStations as $ffwcStation)
                             <option value="{{$ffwcStation->id}}">{{$ffwcStation->name}}</option>
                           @endforeach
