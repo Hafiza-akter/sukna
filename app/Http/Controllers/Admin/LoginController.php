@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 use Hash;
 use Session;
 use Carbon\Carbon;
@@ -63,11 +65,31 @@ class LoginController extends Controller
     }
 
     public function message(Request $request){
-        // dd('ghg');
+        // $rules = array(
+        //     'custom_message' => 'required_without:user_slide_image',
+        //     'user_slide_image' => 'required_without:custom_message',
+        // );
+        // $validateData = $request->validate([
+        //     'custom_message' => 'required_without:user_slide_image',
+        //     'user_slide_image' => 'required_without:custom_message',
+        // ]);
         $id = $request->input('id');
         $customMessage = $request->input('custom_message');
         $user = User::Where('id',$id)->first();
         $user->user_slide_description = $customMessage;
+        $oldImage = $user->user_slide_image;
+        if($request->hasFile('user_slide_image')){
+            if($oldImage){
+                $oldImage = $oldImage;
+                unlink($oldImage);
+            }
+            $file = $request->file('user_slide_image');
+            $filename = rand(1,9000);
+            $file->move(public_path().'/images/',$filename.'_slideimg'.'.'.$file->getClientOriginalExtension());
+            $path = $filename.'_slideimg'.'.'.$file->getClientOriginalExtension();
+            $imgfullPath = 'images/'.$path; 
+            $user->user_slide_image = $imgfullPath;
+        }
         $user->save();
         return back();
 
@@ -124,10 +146,7 @@ class LoginController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.

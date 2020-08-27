@@ -53,4 +53,18 @@ class AjaxController extends Controller
         return response()->json($response); 
 
     }
+
+    public function oldImageRemove(Request $request)
+    {
+        $userId = $request->input('userid');
+        // dd($userId);
+        $user = User::Where('id',$userId)->first();
+        $oldImage = $user->user_slide_image;
+        unlink($oldImage);
+        $user->user_slide_image = null;
+        $user->save();
+        return ;
+
+
+    }
 }

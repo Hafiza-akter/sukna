@@ -14,6 +14,7 @@ $(document).ready(function(){
   $('#email_check').hide();
 
   $('#email_address').keyup(function(){
+    var base_url = getBaseURL();
     var email = $("#email_address").val();
     if(email == ''){
       $('#email_check').hide();
@@ -115,9 +116,6 @@ $(document).ready(function(){
   }
 
 
-
-  
-
   // district upazila and union show hide
 
   // district upazila and union show hide
@@ -152,8 +150,32 @@ $(document).ready(function(){
     }
   }
 
-
-
-  })
+  $("#oldremove").click(function(){
+    var id = $("#userid").val();
+    // console.log(id);
+      $(this).hide();
+      $("#imgthumb").hide();
+      $("#oldremove").hide();
+      $("#imginput").show();
+      $.ajax
+      ({
+        type: "POST",
+        url: base_url+'/api/imgremove',
+        data: {'userid':id},
+        cache: false,
+        success: function(data)
+        {
+          // console.log(data.location);
+          // console.log(data);
+          
+        },
+        dataType: "json"
+        });
   
+  });
+
+  });
+  
+
+
 

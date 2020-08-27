@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/getUpazila','AjaxController@getUpazila')->name('getUpazila');
 Route::post('/getUnion','AjaxController@getUnion')->name('getUnion');
 Route::post('/checkemail','AjaxController@checkEmail')->name('checkEmail');
+Route::post('/imgremove','AjaxController@oldImageRemove')->name('imgRemove');

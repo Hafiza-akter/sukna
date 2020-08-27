@@ -43,14 +43,14 @@
 <!-- <script src="{{asset('dist/js/adminlte.js')}}"></script> -->
 <!-- select 2  -->
 <script src="{{asset('plugins/select2/js/select2.full.min.js')}}"></script>
-<script>
+<!-- <script>
   $(function () {
     // Summernote
     $('.customMessage').summernote({
       
     });
   })
-</script>
+</script> -->
 <script>
   $(function () {
     //Initialize Select2 Elements
