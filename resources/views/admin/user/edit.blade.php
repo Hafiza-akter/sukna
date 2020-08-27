@@ -2,6 +2,7 @@
 @section('mainmodule',' USER')
 @section('modulename','User')
 @section('pagename','edit user')
+@section('title','edit user')
 
 @section('content')
 <div class="container-fluid">
@@ -30,7 +31,8 @@
                   <div class="form-group required row">
                     <label class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" name="email" required value="{{$user->username}}">
+                      <input type="email" class="form-control" name="email" required value="{{$user->username}}" id="email_address">
+                      <span id="email_check"></span>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -51,34 +53,55 @@
                       </div>
                   </div>
                   <span id="locuserfield">
-                  <div class="row">
-                    <div class="col-sm-6">
+                    <?php if($user->user_loc_level == 'district' || $user->user_loc_level == 'upazila' || $user->user_loc_level == 'union'){ ?>
                       <div class="form-group  row">
-                          <label class="col-sm-4 col-form-label">User level</label>
-                        <div class="col-sm-8">
-                          <select class="form-control" name="user_loc_level" >
-                          <option value="">--select--</option>
-                            <option value="district" {{($user->user_loc_level == 'district') ? 'selected' : ''}}>District</option>
-                            <option value="upazila" {{($user->user_loc_level == 'upazila') ? 'selected' : ''}}>Upazila</option>
-                            <option value="union" {{($user->user_loc_level == 'union') ? 'selected' : ''}}>Union</option>
-                          </select>  
-                        </div>
+                      <label class="col-sm-2 col-form-label">User level</label>
+                            <div class="col-sm-10">
+                              <select class="form-control" id="user_level" name="user_loc_level">
+                                <option value="">--select--</option>
+                                <option value="district" {{($user->user_loc_level == 'district') ? 'selected' : ''}}>District</option>
+                                <option value="upazila" {{($user->user_loc_level == 'upazila') ? 'selected' : ''}}>Upazila</option>
+                                <option value="union" {{($user->user_loc_level == 'union') ? 'selected' : ''}}>Union</option>
+                            </select> 
                       </div>
-                    </div> 
-                    <div class="col-sm-6">
-                      <div class="form-group  row">
-                        <label class="col-sm-4 col-form-label">Location</label>
-                        <div class="col-sm-8">
-                            <select class="form-control select2bs4" name="location_id" >
+                    <?php } ?>
+                      </div>
+                      <div class="form-group  row" id="district">
+                      <label class="col-sm-2 col-form-label">District</label>
+                            <div class="col-sm-10"> 
+                                <select class="form-control select2bs4" style="width: 100%;" name="district" id="district_name">
+                                <option value="">--select--</option>
+                                @foreach($districts as $district)
+                                  <option value="{{$district->id}}" {{ $district->district_name == $user->getUserLocation->district_name ? 'selected' : '' }}>{{$district->district_name}}</option>
+                                @endforeach
+                                </select>                
+                            </div>
+                      </div>
+
+                      <div class="form-group  row" id="upazila">
+                  <label class="col-sm-2 col-form-label">Upazila</label>
+                        <div class="col-sm-10"> 
+                            <select class="form-control select2bs4" style="width: 100%;" name="upazila" id="upazila_name" id="upazila_name">
                             <option value="">--select--</option>
-                            @foreach($locations as $location)
-                            <option value="{{$location->id}}" {{($user->location_id  == $location->id) ? 'selected' : ''}}>{{$location->upazila_name}}{{($location->district_name)? "-".$location->district_name:''}}{{($location->union_name)? "-".$location->union_name:''}}</option>
-                            @endforeach
-                            </select>                    
+                              @foreach($upazilas as $upazila)
+                                  <option value="{{$upazila->id}}" {{ $upazila->upazila_name == $user->getUserLocation->upazila_name ? 'selected' : '' }}>{{$upazila->upazila_name}}</option>
+                                @endforeach
+                            </select>                
                         </div>
-                      </div>
-                    </div> 
                   </div>
+
+                  <div class="form-group  row" id="union">
+                  <label class="col-sm-2 col-form-label">Union</label>
+                        <div class="col-sm-10"> 
+                            <select class="form-control select2bs4" style="width: 100%;" name="union" id="union_name" id="union_name">
+                            <option value="">--select--</option>
+                              @foreach($unions as $union)
+                                  <option value="{{$union->id}}" {{ $union->union_name == $user->getUserLocation->union_name ? 'selected' : '' }}>{{$union->union_name}}</option>
+                              @endforeach
+                            </select>                
+                        </div>
+                  </div>
+                  
                   <div class="form-group  row">
                     <label class="col-sm-2 col-form-label">Zoom level</label>
                     <div class="col-sm-10">
@@ -100,9 +123,36 @@
                     <div class="col-sm-12"><p class="text-bold slide mt-3">Assign Slides and Sorting</p></div>
                     <div class="col-sm-12">
                     <ul id="sortable">
-                        @foreach($slideDetails as $slideDetail)
-                        <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input class="habi form-check-input mr-2" type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
+                    <?php
+                    if($slide_num != 0){
+                      $n = count($slide_num);
+                      // dd($n);
+                      for($j=1;$j<=2;$j++){
+                        if($j==1){
+                          for( $i=0; $i< $n; $i++){
+                            foreach($slideDetails as $slideDetail){
+                              if($slideDetail->id == $slide_num[$i]){ ?>
+                                <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input class="habi form-check-input mr-2" name="slide[]" value="{{$slideDetail->id}}"  checked type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
+                              <?php }
+                            }
+                          }
+                        }else{
+                          foreach($slideDetails as $slideDetail){
+                            if(!(in_array($slideDetail->id, $slide_num))){ ?>
+                              <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input class="habi form-check-input mr-2" name="slide[]" value="{{$slideDetail->id}}"  type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
+                            <?php }
+                          }
+                        }
+                      }
+                    }
+                    else{?>
+                      @foreach($slideDetails as $slideDetail)
+                        <li id="{{$slideDetail->id}}" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input name = "slide[]" value="{{$slideDetail->id}}" class="habi form-check-input mr-2" type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
                         @endforeach
+                   <?php }
+                          
+                        ?>
+                       
                        </ul>
                     </div>
                   </div>

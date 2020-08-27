@@ -36,11 +36,25 @@
                         if(!$user->getUserLocation){?>
                           {{'N/A'}}
                        <?php  }
-                        else{ ?>
-                          {{ ($user->getUserLocation->upazila_name) ?  $user->getUserLocation->upazila_name : ''}}
-                          {{ ($user->getUserLocation->district_name) ?  "-".$user->getUserLocation->district_name : ''}}
+                        else{ 
+                          if(($user->user_loc_level == 'union')){
+                          ?>
+                          {{ ($user->getUserLocation->district_name) ?  $user->getUserLocation->district_name : ''}}
+                          {{ ($user->getUserLocation->upazila_name) ?  "-".$user->getUserLocation->upazila_name : ''}}
                           {{ ($user->getUserLocation->union_name) ?  "-".$user->getUserLocation->union_name : ''}}
                       <?php  }
+                      elseif(($user->user_loc_level == 'upazila')){ ?>
+                          {{ ($user->getUserLocation->district_name) ?  $user->getUserLocation->district_name : ''}}
+                          {{ ($user->getUserLocation->upazila_name) ?  "-".$user->getUserLocation->upazila_name : ''}}
+                     
+                      <?php } 
+                       elseif(($user->user_loc_level == 'district')){ ?>
+                          {{ ($user->getUserLocation->district_name) ?  $user->getUserLocation->district_name : ''}}
+                     <?php  }
+                          else{
+                            echo 'N/A';
+                          }
+                        }                      
                        ?>
                       </td>
                       <td>

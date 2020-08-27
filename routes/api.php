@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/getUpazila','AjaxController@getUpazila')->name('getUpazila');
+Route::post('/getUnion','AjaxController@getUnion')->name('getUnion');
+Route::post('/checkemail','AjaxController@checkEmail')->name('checkEmail');

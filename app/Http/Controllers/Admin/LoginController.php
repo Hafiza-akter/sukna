@@ -54,11 +54,23 @@ class LoginController extends Controller
                 return redirect()->back()->with('message','Incorrect username or password!');
             }
             else{
-                session(['user' => $user,'is_admin'=>$is_admin]);
+                session(['user' => $user,'is_admin'=>$is_admin,'message'=>'Login Success']);
+                // return view('admin/home',compact('user'));
                 return redirect()->route('home')->with('message','Login Success!');
             }
                
         }
+    }
+
+    public function message(Request $request){
+        // dd('ghg');
+        $id = $request->input('id');
+        $customMessage = $request->input('custom_message');
+        $user = User::Where('id',$id)->first();
+        $user->user_slide_description = $customMessage;
+        $user->save();
+        return back();
+
     }
 
     public function logout(){
@@ -67,7 +79,9 @@ class LoginController extends Controller
     }
 
     public function home(){
-        return view('admin/home');
+        $userId = Session()->get('user.id');
+        $user = User::where('id',$userId)->first();
+        return view('admin/home',compact('user'));
     }
 
     /**

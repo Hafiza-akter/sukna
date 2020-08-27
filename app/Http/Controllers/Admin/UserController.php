@@ -35,7 +35,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $locations = Location::all();
+        $locations = Location::select('district_name', 'id')->groupBy('district_name')->get();
+        // dd($locations);
         $ffwcStations = FfwcStation::all();
         $slideDetails = SlideDetail::all();
         return view('admin/user/create',compact('roles','locations','ffwcStations','slideDetails'));
@@ -52,8 +53,10 @@ class UserController extends Controller
         // dd($request);
         $validateData = $request->validate([
             'role_id' => 'required',
-            // 'location_id' => 'required',
-            'email' => 'required',
+            // 'district' => 'required',
+            // 'email' => 'required',
+            'email' => 'required|unique:user,username',
+
             // 'ffwc_sations' => 'required',
             // 'zoom_level' => 'required',
             'password' => 'required',
@@ -65,7 +68,15 @@ class UserController extends Controller
         $user->secret = Hash::make($password);
         $user->user_loc_level = $request->input('user_loc_level');
         $user->role_id = $request->input('role_id');
-        $user->location_id = $request->input('location_id');
+        if($user->user_loc_level == 'district'){
+            $user->location_id = $request->input('district');
+        }
+        elseif($user->user_loc_level == 'upazila'){
+            $user->location_id = $request->input('upazila');
+        }
+        elseif($user->user_loc_level == 'union'){
+            $user->location_id = $request->input('union');
+        }
         $user->zoom_level = $request->input('zoom_level');
         $user->save();
         $userId = $user->id;
@@ -78,56 +89,22 @@ class UserController extends Controller
                 $userStation->save();
             }
         }
-        // if($request->input('$slide_1')) {
-        //     $slide_1 = $request->input('$slide_1');
-        // }
-        // else{
-        //     $slide_1 = '';
-        // }
-
-
-        // if($request->input('$slide_2')) {
-        //     $slide_2 = $request->input('$slide_2');
-        // }
-        // else{
-        //     $slide_2 = '';
-        // }
-        // if($request->input('$slide_3')) {
-        //     $slide_3 = $request->input('$slide_3');
-        // }
-        // else{
-        //     $slide_3 = '';
-        // }
-
-
-        // if($request->input('$slide_4')) {
-        //     $slide_4 = $request->input('$slide_4');
-        // }
-        // else{
-        //     $slide_4 = '';
-        // }
-        // if($request->input('$slide_5')) {
-        //     $slide_5 = $request->input('$slide_5');
-        // }
-        // else{
-        //     $slide_5 = '';
-        // }
-        // if($request->input('$slide_6')) {
-        //     $slide_6 = $request->input('$slide_6');
-        // }
-        // else{
-        //     $slide_6 = '';
-        // }
-        // if($request->input('$slide_7')) {
-        //     $slide_7 = $request->input('$slide_7');
-        // }
-        // else{
-        //     $slide_7= '';
-        // }
-
-        // $sort = 
-        
-       
+      
+        $slides = $request->input('slide');
+        if($slides){
+            $n = (count($slides));
+            // dd($n);
+            $slideName = null;
+            for($j=0 ; $j < $n ;$j++){
+                    $slideName = (($slideName) ? $slideName."," :'').$slides[$j];
+            }
+            $slideStatus = new SlideStatus();
+            $slideStatus->slide_status = $slideName;
+            $slideStatus->slide_order = $slideName;
+            $slideStatus->user_id  = $userId;
+            $slideStatus->save();  
+        }
+           
          return redirect()->route('userlist')->with('message','User Created Successfully!'); 
     }
 
@@ -151,13 +128,28 @@ class UserController extends Controller
     public function edit($id)
     {
         $roles = Role::all();
-        $locations = Location::all();
+        $districts = Location::select('district_name', 'id')->groupBy('district_name')->get();
         $ffwcStations = FfwcStation::all();
         $slideDetails = SlideDetail::all();
         $userStations = UserStation::where('user_id',$id)->pluck('ffwc_stations_id')->toArray();
+        $slideStatus = SlideStatus::where('user_id',$id)->first();
+        if($slideStatus){
+            $slide_num = explode(",", $slideStatus->slide_order);
+        }
+        else{
+            $slide_num = 0;
+        }
+        // dd($slide_num);
         // dd((array)$userStations);
         $user = User::Where('id',$id)->first();
-        return view('admin/user/edit', compact('user','roles','locations','ffwcStations','userStations','slideDetails'));
+        $upazilas = $unions = null;
+        $upazilas = Location::select('upazila_name', 'id')->Where('district_name',$user->getUserLocation->district_name)->get();
+        $unions = Location::select('union_name', 'id')
+                                ->Where('district_name',$user->getUserLocation->district_name)
+                                ->Where('upazila_name',$user->getUserLocation->upazila_name)
+                                ->get();
+
+        return view('admin/user/edit', compact('user','roles','districts','upazilas','unions','ffwcStations','userStations','slideDetails','slide_num'));
     }
 
     /**
@@ -169,22 +161,34 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $validateData = $request->validate([
+       
+        $id = $request->input('id');
+        $user =  User::where('id',$id)->first();
+         // dd($request);
+         $validateData = $request->validate([
             
             'role_id' => 'required',
             // 'location_id' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:user,username,'.$user->id,
+
             // 'ffwc_sations' => 'required',
             // 'zoom_level' => 'required',
         ]);
-        $id = $request->input('id');
-        $user =  User::where('id',$id)->first();
         $user->username = $request->input('email');
         $password = $request->input('password');
         $user->secret = Hash::make($password);
         $user->user_loc_level = $request->input('user_loc_level');
+        if($user->user_loc_level == 'district'){
+            $user->location_id = $request->input('district');
+        }
+        elseif($user->user_loc_level == 'upazila'){
+            $user->location_id = $request->input('upazila');
+        }
+        elseif($user->user_loc_level == 'union'){
+            $user->location_id = $request->input('union');
+        }
         $user->role_id = $request->input('role_id');
-        $user->location_id = $request->input('location_id');
+        // $user->location_id = $request->input('district');
         $user->zoom_level = $request->input('zoom_level');
         $user->save();
         if($request->input('ffwc_sations')){
@@ -197,6 +201,26 @@ class UserController extends Controller
                 $userStation->save();
             }
         }
+
+        $slides = $request->input('slide');
+        if($slides){
+            $n = (count($slides));
+            // dd($n);
+            $slideName = null;
+            for($j=0 ; $j < $n ;$j++){
+                    $slideName = (($slideName) ? $slideName."," :'').$slides[$j];
+            }
+            $slideStatus = SlideStatus::where('user_id',$id)->delete();
+            $slideStatus = new SlideStatus();
+            $slideStatus->slide_status = $slideName;
+            $slideStatus->slide_order = $slideName;
+            $slideStatus->user_id  = $id ;
+            $slideStatus->save(); 
+        }
+        else{
+            $slideStatus = SlideStatus::where('user_id',$id)->delete(); 
+        }
+            
     
          return redirect()->route('userlist')->with('message','User Updated Successfully!'); 
 

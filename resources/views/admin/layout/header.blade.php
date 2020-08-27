@@ -48,7 +48,15 @@
           <img src="{{asset('dist/img/user-thumb.png')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">User</a>
+          <a href="#" class="d-block">
+          <?php 
+          if(Session()->get('is_admin')==1){ ?>
+            Admin
+            <?php }else{ ?>
+              {{$user->username}} 
+            <?php }
+              ?>
+          </a>
         </div>
       </div>
 
