@@ -33,6 +33,10 @@ Route::prefix('admin')->group(function(){
     });
 });
 
+Route::group(['middleware'=>'checkAccessToken'],function(){
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+});
+
 
 
 
