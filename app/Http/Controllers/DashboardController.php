@@ -32,8 +32,9 @@ class DashboardController extends Controller
         $password = $request->input('password');
 
         if($email && $password){
-            $user = User::where('username',$email)
-                            ->first();
+            $user = User::where('username', $email)
+                        ->where('role_id', 2)
+                        ->first();
     
             if($user && Hash::check($password,$user->secret)){
                 $secretKey = env('SECRET_KEY');
@@ -43,11 +44,9 @@ class DashboardController extends Controller
                     "exp" => time()+3600
                 );
     
-    
                 $jwt = JWT::encode($payload, $secretKey);
                 return response()->json(['status' => 1, 'statusCode' => 'S100', 'statusDetail' => 'login success', 'token' => $jwt]);
-            }
-            else{
+            }else{
                 return response()->json(['status' => 0, 'statusCode' => 'E102', 'statusDetail' => 'invalid user']);
             }
         }else{
