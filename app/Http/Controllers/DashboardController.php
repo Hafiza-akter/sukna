@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $userData = User::where('id', $userID)
                     ->first();
 
-        dd($userData);
+        return view('dashboard.index');
     }
 
     public function onLogin(Request $request){

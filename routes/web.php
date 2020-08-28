@@ -2,7 +2,8 @@
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes     Route::get('/dashboard','Dashboard\DashboardController@index')->name('dashboard');
+
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These

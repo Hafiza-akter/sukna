@@ -1,0 +1,45 @@
+/*Footer*/
+footer{background: #28a7451f url(../images/footer-bg.png) repeat; }
+footer .top-footer-bar{ background: #20ce6a; /*border-bottom: 1px solid #72b027;*/ text-align: center; padding: 0.1rem 0}
+footer nav.footer-menu{}
+footer nav.footer-menu ul{ list-style: none; padding: 0px; margin: 0px}
+footer nav.footer-menu ul li{ display: inline-block}
+footer nav.footer-menu ul li a{ color: #fff !important; padding: .2rem .5rem; display: inline-block; font-size: 0.875rem}
+footer nav.footer-menu ul li.divider{ width: 1px; height: 10px; background: #fff}
+
+footer .footer{ padding: 0.8rem 1rem 0.0rem 0px; color: #333}
+footer .footer-logo{ padding: 0.5rem 1rem 0.5rem 0; border-right: 1px solid #f8f8f8; display: inline-block; float: left}
+footer .footer-logo img{ _width: 100px}
+
+footer .footer-line{ display: inline-block; float: left; padding: 0.3rem 0 0.3rem 0rem}
+
+footer .credit{ display: block}
+footer .credit-title{ font-size: 0.85rem; display: inline-block; margin-right: 5px}
+footer .credit img{ padding: 0 0.2rem .5rem 0.2rem}
+
+footer .social{ list-style: none; margin: 7px 0 0 0; padding: 0px; width: auto; height: 45px; display: block}
+footer .social li{ display: inline-block; text-align: center; margin: 10px 3px; float: right; cursor: pointer; -webkit-transition: all .2s ease-in-out; transition: all .2s ease-in-out}
+footer .social li:hover{ margin-top: 5px}
+footer .social li i{ color: #fff; width: 35px; height: 35px; border-radius: 50%; padding-top: 9px; font-size: 1rem}
+footer .social li i.fa-facebook{ background: #3b5998}
+footer .social li i.fa-twitter{ background: #55acee}
+footer .social li i.fa-google-plus{ background: #dc4e41}
+footer .social li i.fa-linkedin{ background: #0077b5}
+
+footer .developer-corner{ margin-top: 0px; display: block}
+footer .developer-title{ font-size: 0.85rem; display: inline-block}
+footer .developer{ display: block; margin-left: 10px}
+footer .developer img{ height: 17px}
+
+.logo-link{ position: absolute; top:0px; bottom: 0px}
+.a2i-link{ left: 0px; width: 58px}
+.cabinet-link{ left: 58px; width: 98px}
+.ictd-link{ left: 155px; width: 73px}
+.undp-link{ left: 226px; width: 37px}
+
+
+footer .copy-right{ font-size: 0.8rem; font-size: 0.7rem; background: none; padding-left: 0px}
+
+.back-to-top{ position: fixed; bottom: 30px; right: 30px; width: 40px; height: 40px; padding: 0px 5px; background: #9d84c1; border-radius: 5px; border: 2px solid #2b1847; cursor: pointer; display: none}
+.back-to-top i{ font-size: 2.2rem; color: #FFF; margin-top: -3px;}
+/*Footer*/
