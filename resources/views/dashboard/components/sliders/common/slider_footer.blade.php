@@ -68,10 +68,10 @@
                     Developed by         
                     </div>
                     <div class="developer">
-
-                        <a href="" target="_blank">
+                    	<h6>company name</h6>
+                        {{-- <a href="" target="_blank">
                             <img src="{{asset('images/develop1.png')}}">
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
       </div>

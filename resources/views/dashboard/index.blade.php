@@ -95,8 +95,8 @@ video {
 
 
 <div class="container-fluid px-0"> <!-- data-interval="true" -->
-    {{-- <div id="carouselExampleControls" class="carousel slide"  data-pause="hover"  data-ride="carousel"> --}}
-    <div id="carouselExampleControls" class="carousel slide"  data-interval="false"  data-ride="carousel">
+    <div id="carouselExampleControls" class="carousel slide"  data-pause="hover"  data-ride="carousel">
+    {{-- <div id="carouselExampleControls" class="carousel slide"  data-interval="false"  data-ride="carousel"> --}}
         <div class="carousel-inner bg-info" role="listbox">
           @include('dashboard.components.sliders.kiosk_01_welcome')
           @include('dashboard.components.sliders.kiosk_02_union')
