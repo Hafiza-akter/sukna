@@ -1,0 +1,50 @@
+.moto{
+    font-size: 1.1rem;
+    font-weight: 700;
+    
+}
+.form-group.required .col-form-label::after {
+    content: "*";
+    color: red;
+}
+
+.slide{
+    font-size:22px;
+}
+
+#sortable {
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    width: 60%; 
+   }
+ #sortable li { 
+   margin: 0 3px 3px 3px; 
+   padding: 1em; 
+   padding-left: 1.5em; 
+   font-size: 1.4em; 
+   height: 18px; 
+ }
+ #sortable li .ui-icon-arrowthick-2-n-s { 
+   position: absolute; 
+   margin-left: -1.3em; 
+   margin-right: 1em;
+ }
+ #sortable li .habi { 
+   position: relative;
+   bottom: 13px;
+   left: 8%;
+ }
+
+ #email_check{
+   color: red;
+   padding-left: 3%;
+ }
+
+ .note-group-select-from-files {
+  display: none;
+}
+.loginback{
+  background-image: url('../img/login_1.jpg');
+   background-size: cover;
+}

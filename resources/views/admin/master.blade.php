@@ -1,93 +1,74 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <title>NGO</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>KIOSK | @yield('title')</title>
-  <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}" >
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="{{asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}">
-  <!-- Tempusdominus Bbootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{{asset('plugins/jqvmap/jqvmap.min.css')}}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
-  <!-- summernote -->
-  <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.css')}}">
-  <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <link rel="stylesheet" href="{{asset('plugins/select2/css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 
-  <link rel="stylesheet" href="{{asset('css/style.css')}}">
+  <!-- CSRF Token -->
 
+  <link rel="shortcut icon" href="favicon.ico">
+  <!-- plugin css -->
+  <link rel="stylesheet" href="{{asset('dist/css/materialdesignicons.min.css')}}">
+  <link rel="stylesheet" href="{{asset('dist/css/perfect-scrollbar.css')}}">
 
-  <!-- sortable jquery -->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <!-- end plugin css -->
 
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  } );
+  <!-- plugin css -->
+    <!-- end plugin css -->
 
+  <!-- common css -->
+  <link media="all" type="text/css" rel="stylesheet" href="{{asset('dist/css/app2.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{asset('dist/css/style.css')}}">
 
-  function sortablesubmit(){
-   var idsInOrder = $("#sortable").sortable("toArray");
-  //  alert(idsInOrder);
-}
+  <!-- end common css -->
 
-
-
-
-  </script>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
 
-@include('admin.layout.header')
+<body>
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">@yield('mainmodule')</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">@yield('modulename')</a></li>
-              <li class="breadcrumb-item active">@yield('pagename')</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+  <div class="container-scroller" id="app">
+  @include('admin.layout.header')
+
+    <div class="container-fluid page-body-wrapper">
+    @include('admin.layout.sidebar')
+
+      <div class="main-panel">
+        <div class="content-wrapper">
+          @yield('content')
+        </div>
+        @include('admin.layout.footer')
+
+      </div>
     </div>
-    <!-- /.content-header -->
-    <!-- Main content -->
-    <section class="content">
-    @if(Session::has('message'))
-    <p id="flashMessage" class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
-    @endif
-    @yield('content')
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+  </div>
+  <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
-    @include('admin.layout.footer')
+  <script src="{{asset('js/custom.js')}}"></script>
+
+  <!-- base js -->
+
+  <script src="{{asset('dist/js/app.js')}}"></script>
+  <script src="{{asset('dist/js/perfect-scrollbar.min.js')}}"></script>
+  <!-- end base js -->
+
+  <!-- plugin js -->
+  <script src="{{asset('dist/js/chart.min.js')}}"></script>
+  <script src="{{asset('dist/js/jquery.sparkline.min.js')}}"></script>
+  <!-- end plugin js -->
+
+  <!-- common js -->
+  <script src="{{asset('dist/js/off-canvas.js')}}"></script>
+  <script src="{{asset('dist/js/hoverable-collapse.js')}}"></script>
+  <script src="{{asset('dist/js/misc.js')}}"></script>
+  <script src="{{asset('dist/js/settings.js')}}"></script>
+  <script src="{{asset('dist/js/todolist.js')}}"></script>
+  <!-- end common js -->
+
+  <script src="{{asset('dist/js/dashboard.js')}}"></script>
 </body>
+
+
 </html>

@@ -19,7 +19,7 @@ class CheckAdmin
         $user = Session::get('user');
         $is_admin = Session::get('is_admin');
         // dd($user->is_super_admin);
-        if($is_admin == 1){
+        if($is_admin == 1 || $is_admin == 2){
             return $next($request);
         }
         else{

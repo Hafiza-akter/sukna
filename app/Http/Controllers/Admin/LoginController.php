@@ -31,6 +31,13 @@ class LoginController extends Controller
     {
         return view('admin/auth/registration');
     }
+    public function registrationSubmit(Request $request){
+        dd('hvgh v');
+    }
+    public function registration(){
+        return view('admin/auth/registration');
+
+    }
 
     public function loginsubmit(Request $request)
     {
@@ -42,20 +49,29 @@ class LoginController extends Controller
         $password = $request->input('password');
         $superadmin = config('constants.superadmin');
         $sadmin_password = config('constants.superadmin_password');
+        // dd('hjbhg');
         if($email == $superadmin && $sadmin_password == $password){
             $user = $superadmin;
-            $is_admin = 1;
+            $is_admin = 2;
             session(['user' => $user,'is_admin'=>$is_admin]);
             return redirect()->route('home')->with('message','Login Success!');
 
         }else{
-            $is_admin = 0;
-            $user = User::where('username',$email)
+            // dd('2');
+            $user = User::where('email',$email)
                         ->first();
-            if(!$user || (!Hash::check($password,$user->secret))){
+            if(!$user || (!Hash::check($password,$user->password))){
                 return redirect()->back()->with('message','Incorrect username or password!');
             }
             else{
+                
+                $userType = $user->is_admin;
+                if($userType == 1){
+                    $is_admin = 1;
+                }
+                else{
+                    $is_admin = 0;
+                }
                 session(['user' => $user,'is_admin'=>$is_admin,'message'=>'Login Success']);
                 // return view('admin/home',compact('user'));
                 return redirect()->route('home')->with('message','Login Success!');
@@ -64,36 +80,7 @@ class LoginController extends Controller
         }
     }
 
-    public function message(Request $request){
-        // $rules = array(
-        //     'custom_message' => 'required_without:user_slide_image',
-        //     'user_slide_image' => 'required_without:custom_message',
-        // );
-        // $validateData = $request->validate([
-        //     'custom_message' => 'required_without:user_slide_image',
-        //     'user_slide_image' => 'required_without:custom_message',
-        // ]);
-        $id = $request->input('id');
-        $customMessage = $request->input('custom_message');
-        $user = User::Where('id',$id)->first();
-        $user->user_slide_description = $customMessage;
-        $oldImage = $user->user_slide_image;
-        if($request->hasFile('user_slide_image')){
-            if($oldImage){
-                $oldImage = $oldImage;
-                unlink($oldImage);
-            }
-            $file = $request->file('user_slide_image');
-            $filename = rand(1,9000);
-            $file->move(public_path().'/images/',$filename.'_slideimg'.'.'.$file->getClientOriginalExtension());
-            $path = $filename.'_slideimg'.'.'.$file->getClientOriginalExtension();
-            $imgfullPath = 'images/'.$path; 
-            $user->user_slide_image = $imgfullPath;
-        }
-        $user->save();
-        return back();
 
-    }
 
     public function logout(){
         session()->flush();
@@ -101,9 +88,14 @@ class LoginController extends Controller
     }
 
     public function home(){
-        $userId = Session()->get('user.id');
-        $user = User::where('id',$userId)->first();
-        return view('admin/home',compact('user'));
+        if(Session()->get('is_admin') !=2 ){
+            $userId = Session()->get('user.id');
+            $user = User::where('id',$userId)->first();
+            return view('admin/home',compact('user'));
+        }else{
+            return view('admin/home');
+        }
+        
     }
 
     /**

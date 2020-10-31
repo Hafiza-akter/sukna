@@ -1,21 +1,24 @@
 @extends('admin/master')
+@section('title','Add User')
 @section('mainmodule',' USER')
 @section('modulename','User')
-@section('pagename','edit user')
-@section('title','edit user')
+@section('pagename','add user')
+
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-        <div class="card card-info">
-              <div class="card-header">
-                <h3 class="card-title">Edit user</h3>
-                <a class="btn-sm btn-primary float-right custombtn1" href="{{route('userlist')}}" role="button"><i class="fas fa-list"></i> User List</a>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              @if ($errors->any())
+  <div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="col-md-12">
+      <?php 
+      // dd(Session()->get('is_admin'));
+       if (Session()->get('is_admin') != 0) { ?>
+               <h4 class="card-title text-center">Edit User</h4>
+
+          <div class="auto-form-wrapper col-lg-6 mx-auto ">
+          @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->all() as $error)
@@ -24,148 +27,97 @@
                         </ul>
                     </div>
                 @endif
-              <form class="form-horizontal" method="post" action="{{route('userupdate')}}">
+              <form class="form-horizontal" method="post" action="{{route('userupdate')}}" onsubmit="sortablesubmit()" enctype="multipart/form-data">
                 {{ csrf_field() }}
-                <input type="hidden" name="id" value="{{$user->id}}">
-                <div class="card-body">
-                  <div class="form-group required row">
-                    <label class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" name="email" required value="{{$user->username}}" id="email_address">
-                      <span id="email_check"></span>
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" placeholder="Username" value="{{$user->name}}" name="name" class="form-control" required> 
+                  <div class="input-group-append"><span class="input-group-text">
+                    Name<i class="mdi mdi-check-circle-outline"></i>
+                  </span>
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Password</label>
-                    <div class="col-sm-10">
-                      <input type="password" class="form-control" name="password"  placeholder="Password">
+              </div> 
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="email" placeholder="Email" value="{{$user->email}}" name="email" class="form-control" required> 
+                  <div class="input-group-append"><span class="input-group-text">
+                   Email<i class="mdi mdi-check-circle-outline"></i>
+                  </span>
                     </div>
                   </div>
-                  <div class="form-group required row">
-                    <label class="col-sm-2 col-form-label">Role</label>
-                      <div class="col-sm-10">
-                          <select class="form-control" required name="role_id" id="role_id" required>
-                          <option value="">--select--</option>
-                          @foreach($roles as $role)
-                          <option value="{{$role->id}}" {{($user->role_id == $role->id) ? 'selected' : ''}}>{{$role->name}}</option>
-                          @endforeach
-                          </select>                    
-                      </div>
-                  </div>
-                  <span id="locuserfield">
-                    <?php if($user->user_loc_level == 'district' || $user->user_loc_level == 'upazila' || $user->user_loc_level == 'union'){ ?>
-                      <div class="form-group  row">
-                      <label class="col-sm-2 col-form-label">User level</label>
-                            <div class="col-sm-10">
-                              <select class="form-control" id="user_level" name="user_loc_level">
-                                <option value="">--select--</option>
-                                <option value="district" {{($user->user_loc_level == 'district') ? 'selected' : ''}}>District</option>
-                                <option value="upazila" {{($user->user_loc_level == 'upazila') ? 'selected' : ''}}>Upazila</option>
-                                <option value="union" {{($user->user_loc_level == 'union') ? 'selected' : ''}}>Union</option>
-                            </select> 
-                      </div>
-                    <?php } ?>
-                      </div>
-                      <div class="form-group  row" id="district">
-                      <label class="col-sm-2 col-form-label">District</label>
-                            <div class="col-sm-10"> 
-                                <select class="form-control select2bs4" style="width: 100%;" name="district" id="district_name">
-                                <option value="">--select--</option>
-                                @foreach($districts as $district)
-                                  <option value="{{$district->id}}" {{ $district->district_name == $user->getUserLocation->district_name ? 'selected' : '' }}>{{$district->district_name}}</option>
-                                @endforeach
-                                </select>                
-                            </div>
-                      </div>
-
-                      <div class="form-group  row" id="upazila">
-                  <label class="col-sm-2 col-form-label">Upazila</label>
-                        <div class="col-sm-10"> 
-                            <select class="form-control select2bs4" style="width: 100%;" name="upazila" id="upazila_name" id="upazila_name">
-                            <option value="">--select--</option>
-                              @foreach($upazilas as $upazila)
-                                  <option value="{{$upazila->id}}" {{ $upazila->upazila_name == $user->getUserLocation->upazila_name ? 'selected' : '' }}>{{$upazila->upazila_name}}</option>
-                                @endforeach
-                            </select>                
-                        </div>
-                  </div>
-
-                  <div class="form-group  row" id="union">
-                  <label class="col-sm-2 col-form-label">Union</label>
-                        <div class="col-sm-10"> 
-                            <select class="form-control select2bs4" style="width: 100%;" name="union" id="union_name" id="union_name">
-                            <option value="">--select--</option>
-                              @foreach($unions as $union)
-                                  <option value="{{$union->id}}" {{ $union->union_name == $user->getUserLocation->union_name ? 'selected' : '' }}>{{$union->union_name}}</option>
-                              @endforeach
-                            </select>                
-                        </div>
-                  </div>
-                  
-                  <div class="form-group  row">
-                    <label class="col-sm-2 col-form-label">Zoom level</label>
-                    <div class="col-sm-10">
-                      <input type="number" class="form-control" name="zoom_level" value="{{$user->zoom_level}}">
-                    </div>
-                  </div>
-
-                  <div class="form-group  row">
-                  <label class="col-sm-2 col-form-label">Station</label>
-                    <div class="col-sm-10 select2-purple">
-                      <select class="select2" name="ffwc_sations[]"  multiple="multiple" data-placeholder="Select a station" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                          @foreach($ffwcStations as $ffwcStation)
-                              <option value="{{$ffwcStation->id}}"{{(in_array($ffwcStation->id, $userStations)) ? 'selected="true"':''}}>{{$ffwcStation->name}}</option>
-                          @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="col-sm-12"><p class="text-bold slide mt-3">Assign Slides and Sorting</p></div>
-                    <div class="col-sm-12">
-                    <ul id="sortable">
-                    <?php
-                    if($slide_num != 0){
-                      $n = count($slide_num);
-                      // dd($n);
-                      for($j=1;$j<=2;$j++){
-                        if($j==1){
-                          for( $i=0; $i< $n; $i++){
-                            foreach($slideDetails as $slideDetail){
-                              if($slideDetail->id == $slide_num[$i]){ ?>
-                                <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input class="habi form-check-input mr-2" name="slide[]" value="{{$slideDetail->id}}"  checked type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
-                              <?php }
-                            }
-                          }
-                        }else{
-                          foreach($slideDetails as $slideDetail){
-                            if(!(in_array($slideDetail->id, $slide_num))){ ?>
-                              <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input class="habi form-check-input mr-2" name="slide[]" value="{{$slideDetail->id}}"  type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
-                            <?php }
-                          }
-                        }
-                      }
-                    }
-                    else{?>
-                      @foreach($slideDetails as $slideDetail)
-                        <li id="{{$slideDetail->id}}" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input name = "slide[]" value="{{$slideDetail->id}}" class="habi form-check-input mr-2" type="checkbox"><span class="habi">{{$slideDetail->slide_name}}</span></li>
-                        @endforeach
-                   <?php }
-                          
-                        ?>
-                       
-                       </ul>
-                    </div>
-                  </div>
-                 </span>
+              </div> 
+              <div class="form-group">
+              <div class="input-group">
+                <input type="password" placeholder="Password" name="password" class="form-control" >
+                 <div class="input-group-append"><span class="input-group-text">Password<i class="mdi mdi-check-circle-outline"></i></span>
                 </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-info">Submit</button>
-                </div>
-                <!-- /.card-footer -->
-              </form>
+              </div>
             </div>
-        </div>
+           
+            <div class="form-group">
+              <div class="input-group">
+                <input type="number" placeholder="Phone" value="{{$user->phone}}" name="phone" class="form-control" required>
+                 <div class="input-group-append"><span class="input-group-text">Phone<i class="mdi mdi-check-circle-outline"></i></span>
+                </div>
+              </div>
+            </div> 
+            <div class="form-group">
+              <div class="input-group">
+                <!-- <input type="password" placeholder="Password" value="{{$user->name}}" name="is_admin" class="form-control" required> -->
+                <select class="form-control" required  name="is_admin">
+                    <option value="">--select--</option>
+                    <option value="1"  {{($user->is_admin == 1) ? 'selected' : ''}}>admin</option>
+                    <option value="0" {{($user->is_admin == 0) ? 'selected' : ''}}>user</option>
+                </select>
+                 <div class="input-group-append"><span class="input-group-text">Is Admin?<i class="mdi mdi-check-circle-outline"></i></span>
+                </div>
+              </div>
+            </div>  
+            <div class="form-group">
+              <div class="input-group">
+                <select class="form-control" required name="status">
+                      <option value="">--select--</option>
+                      <option value="1" {{($user->status == 1) ? 'selected' : ''}}>Active</option>
+                      <option value="0" {{($user->status == 0) ? 'selected' : ''}}>Deactiavte</option>
+                  </select>
+                <!-- <input type="password" placeholder="Password" value="{{$user->name}}" name="password" class="form-control" required> -->
+                 <div class="input-group-append"><span class="input-group-text">Status<i class="mdi mdi-check-circle-outline"></i></span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden"  value="{{$user->id}}" name="id"  >
+
+            <div class="form-group">
+              <div class="input-group">
+                        @php $image = $user->img @endphp
+                          <img src="{{asset('images/'.$user->img)}}" class="remove-img" style="width:200px; height:auto"/>
+                          <input type="file" name="img"  id="inputimg" style="{{($image)? 'display:none':''}}" class="form-control">
+                 <div class="input-group-append">
+                   <span class="input-group-text">
+                        <a class="btn btn-danger" id="remove-btn" style="{{($image)? '':'display:none'}}">Remove</a>
+                </div>
+              </div>
+            </div> 
+            
+          <div class="form-group d-flex justify-content-center">
+        <div class="form-check form-check-flat mt-0"><label class="form-check-label">
+            <div class="form-group">
+              <button class="btn btn-primary submit-btn btn-block">Add</button>
+            </div> 
+            
+            </form>
+            </div>
+      <?php  }else{
+        // dd('dsfsdf');
+        echo '<h4>Admin Dashboard</h4>';
+      }
+      ?>
     </div>
-</div>
+      </div>
+    </div>
+  </div>
+    
+  </div> <!-- /.row-->
+</div><!-- /.container-fluid -->
 @endsection

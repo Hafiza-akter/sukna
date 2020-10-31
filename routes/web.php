@@ -15,12 +15,14 @@ Route::prefix('admin')->group(function(){
     Route::group(['middleware'=>'checkLogout'],function(){
         Route::get('/login','Admin\LoginController@index')->name('login'); 
         Route::post('/loginsubmit','Admin\LoginController@loginsubmit')->name('loginsubmit');
+
+        Route::get('/registration','Admin\LoginController@registration')->name('registration'); 
+        Route::post('/registration/submit','Admin\LoginController@registrationSubmit')->name('registration.submit');
     });
 
     Route::group(['middleware'=>'checkLogin'],function(){
         Route::get('/logout','Admin\LoginController@logout')->name('logout');
         Route::get('/home','Admin\LoginController@home')->name('home');
-        Route::post('/custom/message','Admin\LoginController@message')->name('message');
 
         Route::group(['middleware'=>'checkAdmin'],function(){
             Route::prefix('user')->group(function(){

@@ -5,12 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\User;
-use App\Model\Role;
-use App\Model\FfwcStation;
-use App\Model\UserStation;
-use App\Model\SlideDetail;
-use App\Model\Location;
-use App\Model\SlideStatus;
+
 use Hash;
 
 
@@ -23,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $userList = User::orderBy('id','DESC')->paginate(5);
+        $userList = User::orderBy('id','DESC')->paginate(3);
         return view('admin/user/list',compact('userList'));
     }
 
@@ -34,12 +29,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        $locations = Location::select('district_name', 'id')->groupBy('district_name')->get();
-        // dd($locations);
-        $ffwcStations = FfwcStation::all();
-        $slideDetails = SlideDetail::all();
-        return view('admin/user/create',compact('roles','locations','ffwcStations','slideDetails'));
+     
+        return view('admin/user/create');
     }
 
     /**
@@ -52,59 +43,31 @@ class UserController extends Controller
     {
         // dd($request);
         $validateData = $request->validate([
-            'role_id' => 'required',
-            // 'district' => 'required',
-            // 'email' => 'required',
-            'email' => 'required|unique:user,username',
-
-            // 'ffwc_sations' => 'required',
-            // 'zoom_level' => 'required',
+            'name' => 'required',
+            'email' => 'required',
             'password' => 'required',
+            'phone' => 'required',
+            'status' => 'required',
+            'is_admin' => 'required',
+          
 
         ]);
         $user = new User();
-        $user->username = $request->input('email');
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->is_admin = $request->input('is_admin');
+        $user->status = $request->input('status');
         $password = $request->input('password');
-        $user->secret = Hash::make($password);
-        $user->user_loc_level = $request->input('user_loc_level');
-        $user->role_id = $request->input('role_id');
-        if($user->user_loc_level == 'district'){
-            $user->location_id = $request->input('district');
+        $user->password = Hash::make($password);
+        if($request->hasFile('img')){
+            $filename = rand(1,9999).rand(1,5555);
+            $file = $request->file('img');
+            $file->move(public_path().'/images/', $filename.'_img'.'.'.$file->getClientOriginalExtension());
+            $img_path = $filename.'_img'.'.'.$file->getClientOriginalExtension();
         }
-        elseif($user->user_loc_level == 'upazila'){
-            $user->location_id = $request->input('upazila');
-        }
-        elseif($user->user_loc_level == 'union'){
-            $user->location_id = $request->input('union');
-        }
-        $user->zoom_level = $request->input('zoom_level');
+        $user->img = $img_path;
         $user->save();
-        $userId = $user->id;
-        if($request->input('ffwc_sations')){
-            $ffwc_sations = $request->input('ffwc_sations');
-            foreach($ffwc_sations as $ffwc_sation){
-                $userStation = new UserStation();
-                $userStation->user_id = $userId;
-                $userStation->ffwc_stations_id = $ffwc_sation;
-                $userStation->save();
-            }
-        }
-      
-        $slides = $request->input('slide');
-        if($slides){
-            $n = (count($slides));
-            // dd($n);
-            $slideName = null;
-            for($j=0 ; $j < $n ;$j++){
-                    $slideName = (($slideName) ? $slideName."," :'').$slides[$j];
-            }
-            $slideStatus = new SlideStatus();
-            $slideStatus->slide_status = $slideName;
-            $slideStatus->slide_order = $slideName;
-            $slideStatus->user_id  = $userId;
-            $slideStatus->save();  
-        }
-           
          return redirect()->route('userlist')->with('message','User Created Successfully!'); 
     }
 
@@ -127,29 +90,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $roles = Role::all();
-        $districts = Location::select('district_name', 'id')->groupBy('district_name')->get();
-        $ffwcStations = FfwcStation::all();
-        $slideDetails = SlideDetail::all();
-        $userStations = UserStation::where('user_id',$id)->pluck('ffwc_stations_id')->toArray();
-        $slideStatus = SlideStatus::where('user_id',$id)->first();
-        if($slideStatus){
-            $slide_num = explode(",", $slideStatus->slide_order);
-        }
-        else{
-            $slide_num = 0;
-        }
-        // dd($slide_num);
-        // dd((array)$userStations);
+        
         $user = User::Where('id',$id)->first();
-        $upazilas = $unions = null;
-        $upazilas = Location::select('upazila_name', 'id')->Where('district_name',$user->getUserLocation->district_name)->get();
-        $unions = Location::select('union_name', 'id')
-                                ->Where('district_name',$user->getUserLocation->district_name)
-                                ->Where('upazila_name',$user->getUserLocation->upazila_name)
-                                ->get();
-
-        return view('admin/user/edit', compact('user','roles','districts','upazilas','unions','ffwcStations','userStations','slideDetails','slide_num'));
+        return view('admin/user/edit', compact('user'));
     }
 
     /**
@@ -162,70 +105,55 @@ class UserController extends Controller
     public function update(Request $request)
     {
        
-        $id = $request->input('id');
-        $user =  User::where('id',$id)->first();
-         // dd($request);
-         $validateData = $request->validate([
-            
-            'role_id' => 'required',
-            // 'location_id' => 'required',
-            'email' => 'required|email|unique:user,username,'.$user->id,
+        $validateData = $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'status' => 'required',
+            'is_admin' => 'required',
+          
 
-            // 'ffwc_sations' => 'required',
-            // 'zoom_level' => 'required',
         ]);
-        $user->username = $request->input('email');
-        $password = $request->input('password');
-        $user->secret = Hash::make($password);
-        $user->user_loc_level = $request->input('user_loc_level');
-        if($user->user_loc_level == 'district'){
-            $user->location_id = $request->input('district');
+        $id = $request->input('id');
+        $user = User::Where('id',$id)->first();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->is_admin = $request->input('is_admin');
+        $user->status = $request->input('status');
+        if($request->input('password')){
+            $password = $request->input('password');
+            $user->password = Hash::make($password);
         }
-        elseif($user->user_loc_level == 'upazila'){
-            $user->location_id = $request->input('upazila');
+        if($request->hasFile('img')){
+            $image = $file = $request->file('img');
+            $imageName = $image->getClientOriginalName();
+            $fileName = $this->generateUid(10).$this->generateUid(10);
+            $directory = public_path().'/images/';
+            $imageUrl = $directory.$fileName.'.'.$image->getClientOriginalExtension();
+            // unlink($imageUrl);
+            $oldimg = $user->img;
+            $oldimgFullPath = $directory.$oldimg;
+            // dd($oldimgFullPath);
+            unlink($oldimgFullPath);
+            $file->move(public_path().'/images/', $fileName.'_img'.'.'.$file->getClientOriginalExtension());
+            $img_path = $fileName.'_img'.'.'.$file->getClientOriginalExtension();
+            $user->img = $img_path;
+
         }
-        elseif($user->user_loc_level == 'union'){
-            $user->location_id = $request->input('union');
-        }
-        $user->role_id = $request->input('role_id');
-        // $user->location_id = $request->input('district');
-        $user->zoom_level = $request->input('zoom_level');
         $user->save();
-        if($request->input('ffwc_sations')){
-            $ffwc_sations = $request->input('ffwc_sations');
-            $userStation = UserStation::where('user_id',$id)->delete();
-            foreach($ffwc_sations as $ffwc_sation){
-                $userStation = new UserStation();
-                $userStation->user_id = $id;
-                $userStation->ffwc_stations_id = $ffwc_sation;
-                $userStation->save();
-            }
-        }
-
-        $slides = $request->input('slide');
-        if($slides){
-            $n = (count($slides));
-            // dd($n);
-            $slideName = null;
-            for($j=0 ; $j < $n ;$j++){
-                    $slideName = (($slideName) ? $slideName."," :'').$slides[$j];
-            }
-            $slideStatus = SlideStatus::where('user_id',$id)->delete();
-            $slideStatus = new SlideStatus();
-            $slideStatus->slide_status = $slideName;
-            $slideStatus->slide_order = $slideName;
-            $slideStatus->user_id  = $id ;
-            $slideStatus->save(); 
-        }
-        else{
-            $slideStatus = SlideStatus::where('user_id',$id)->delete(); 
-        }
-            
-    
          return redirect()->route('userlist')->with('message','User Updated Successfully!'); 
-
     }
 
+    function generateUid($length){
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $string = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
+        }
+        return $string;
+    }
     /**
      * Remove the specified resource from storage.
      *
